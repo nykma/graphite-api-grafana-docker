@@ -1,0 +1,28 @@
+version: '2'
+services:
+  graphite:
+    image: ennexa/graphite
+    container_name: graphite
+    volumes:
+      - ./conf:/opt/graphite/conf
+      - /data/whisper:/opt/graphite/storage/whisper
+    ports:
+      - '60004:8000' # graphite-api
+      - '60001:2003'
+      - '60001:2003/udp'
+      - '60002:2004'
+      - '60003:2005'
+  grafana:
+    image: grafana/grafana
+    container_name: grafana
+    volumes: 
+      - /data/grafana:/var/lib/grafana
+    ports:
+      - '60010:3000'
+    environment:
+      - GF_SERVER_ROOT_URL=http://grafana.local
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+      - GF_USERS_ALLOW_SIGN_UP=false
+      - GF_USERS_ALLOW_ORG_CREATE=false
+      - GF_AUTH_ANONYMOUS_ENABLED=true
+      - GF_INSTALL_PLUGINS=grafana-clock-panel,grafana-simple-json-datasource
